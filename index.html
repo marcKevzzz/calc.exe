@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Calculator</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Calculator</h1>
+        <p>e.g., 1+1 or 1*1</p>
+        <input type="text" id="expression" placeholder="Enter here">
+        <button id="calculateBtn">Calculate</button>
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            
+            const expression = document.getElementById('expression').value;
+
+            let correctAnswer;
+            try {
+                correctAnswer = eval(expression);  
+            } catch (error) {
+                alertBoxes('Invalid expression! Please enter a valid mathematical expression.');
+                return;
+            }
+
+            askForAnswer(expression, correctAnswer);
+        });
+
+        function askForAnswer(expression, correctAnswer) {
+            const alertBox = document.createElement('div');
+            alertBox.className = 'custom-alert';
+            alertBox.innerHTML = `
+                <h3>What is ${expression}?</h3>
+                <input type="number" id="userAnswer" placeholder="Enter your answer">
+                <button id="submitAnswer">Submit Answer</button>
+            `;
+            document.body.appendChild(alertBox);
+
+            document.getElementById('submitAnswer').addEventListener('click', function() {
+                const userAnswer = parseFloat(document.getElementById('userAnswer').value);
+                
+                if (userAnswer === correctAnswer) {
+                    alertBoxes('You are correct!');
+                } else {
+                    alertBoxes(`You are wrong. The correct answer is ${correctAnswer}.`);
+                }
+
+                document.body.removeChild(alertBox);
+            });
+        }
+
+        function alertBoxes(message) {
+            const alertes = document.createElement('div');
+            alertes.className = 'custom-alert';
+            alertes.innerHTML = `
+                <h1>${message}</h1>
+                <button id="close">Close</button>
+            `;
+            document.body.appendChild(alertes);
+            document.getElementById('expression').value = ""
+            document.getElementById('close').addEventListener('click', function() {
+                document.body.removeChild(alertes);
+            });
+        }
+    </script>
+</body>
+</html>
